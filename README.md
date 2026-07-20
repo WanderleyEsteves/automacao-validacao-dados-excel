@@ -5,40 +5,36 @@
 ![OpenPyXL](https://img.shields.io/badge/OpenPyXL-GREEN?style=for-the-badge)
 ![Tkinter](https://img.shields.io/badge/Tkinter-GUI-blue?style=for-the-badge)
 
-Uma aplicação desktop em Python desenvolvida para automatizar a extração, higienização, validação matemática e formatação condicional de dados cadastrais provenientes de formulários na nuvem para planilhas Excel localmente.
+Aplicação desktop em Python desenvolvida para automatizar a busca de respostas em formulários na nuvem, validar dados cadastrais e atualizar planilhas Excel localmente sem trabalho manual.
 
 ---
 
-## 🎯 O Problema de Negócio
+## 🎯 O Problema
 
-No fluxo operacional padrão de cadastro e recepção de dados, os erros de digitação por parte dos usuários (como CPFs inválidos, falta de dígitos ou telefones sem DDD) geram um gargalo considerável para a equipe administrativa:
-- **Conferência manual exaustiva:** Horas gastas auditando linha por linha de planilhas de respostas.
-- **Risco de inconsistência:** Erros de digitação passam despercebidos, prejudicando integrações posteriores ou contatos de emergência.
-- **Falta de padronização:** Vários formatos de telefone e máscaras de documento misturados no mesmo banco de dados.
+Trabalhar com cadastro de pessoas costuma virar um gargalo operacional rapidamente quando a coleta é feita de forma descentralizada (por mensagens de WhatsApp, e-mails ou formulários sem integração):
+- **Gasto de tempo absurdo:** A equipe precisa abrir mensagem por mensagem, copiar dados e colar linha por linha na planilha interna.
+- **Trabalho repetitivo:** Dezenas de horas jogadas fora com digitação manual que poderiam ser usadas para tarefas mais importantes.
+- **Dados incorretos no sistema:** Pessoas digitam CPFs errados ou esquecem o DDD no telefone. Sem uma checagem rápida, esses erros vão parar direto na base da empresa.
 
 ---
 
-## 🚀 A Solução Desenvolvida
+## 🚀 Como a Ferramenta Resolve Isso
 
-O software realiza um pipeline automatizado de **ETL (Extract, Transform, Load)** focado em **Data Quality**:
+O sistema faz a ponte entre a resposta do formulário e a planilha final da empresa em poucos segundos:
 
-1. **Extração (Extract):** Faz a requisição HTTP e consome a fonte de dados na nuvem via formato CSV em tempo real.
-2. **Transformação & Validação (Transform):**
-   * **Algoritmo de Validação de CPF:** Checagem matemática completa dos dígitos verificadores (módulo 11) da Receita Federal. Aplica a máscara padrão `000.000.000-00`.
-   * **Tratamento de Telefone:** Limpeza de códigos de país redundantes (`+55`), captura inteligente de colunas (`Telefone`, `Zap`, `Contato`, etc.) e aplicação automática do formato `(XX) XXXXX-XXXX`.
-3. **Carga e Alerta Visual (Load & Formatting):**
-   * Consolida as respostas atualizadas dentro da planilha Excel (`.xlsx`).
-   * **UX/UI de Dados:** Aplica formatação condicional cirúrgica diretamente no Excel utilizando `OpenPyXL`. Células com CPF inválido são destacadas em **vermelho** e telefones fora do padrão em **laranja**, permitindo triagem visual imediata do operador.
-4. **Interface Gráfica & Executável (GUI):**
-   * Desenvolvido com `Tkinter` e chamadas assíncronas (`Threading`) para evitar que a janela congele durante a requisição.
-   * Compilado via `PyInstaller` para `.exe` autônomo, permitindo execução em dois cliques por usuários não técnicos sem necessidade de instalação do Python.
+1. **Sincronização com 1 Clique:** O operador clica no botão da ferramenta e o script busca as respostas mais recentes direto da nuvem, alimentando o Excel automaticamente. Chega de copiar e colar.
+2. **Tratamento e Validação Automática:**
+   * **CPF:** Executa o cálculo real do módulo 11 (algoritmo da Receita Federal) para checar se o CPF existe e aplica a formatação `000.000.000-00`.
+   * **Telefone:** Remove o `+55`, ajusta a quantidade de dígitos e padroniza para o formato `(XX) XXXXX-XXXX`.
+3. **Alertas Visuais para Triagem:** Usando o `OpenPyXL`, o script pinta as células diretamente no Excel quando encontra um dado suspeito — **vermelho** para CPFs inválidos e **laranja** para telefones fora do padrão. Assim, a equipe sabe exatamente o que precisa conferir antes de dar andamento.
+4. **Prático e Leve:** Uma janela simples criada com `Tkinter` (usando `Threading` para a tela não travar enquanto baixa os dados), compilada em um arquivo `.exe` pronto para rodar em qualquer Windows.
 
 ---
 
 ## 🛠️ Tecnologias Utilizadas
 
 - **Python 3.13**
-- **Pandas:** Leitura, manipulação estruturada e limpeza de dados.
-- **OpenPyXL:** Manipulação de estilos, células e formatação condicional em planilhas Excel.
-- **Tkinter & Threading:** Interface gráfica amigável e concorrência para processamento em segundo plano.
-- **PyInstaller:** Empacotamento do script e assets gráficos para executável nativo do Windows.
+- **Pandas:** Manipulação, limpeza e estruturação dos dados.
+- **OpenPyXL:** Leitura, gravação e formatação de estilos/cores nas células do Excel.
+- **Tkinter & Threading:** Interface visual leve e execução em segundo plano.
+- **PyInstaller:** Transforma o script em executável autônomo para o usuário final.

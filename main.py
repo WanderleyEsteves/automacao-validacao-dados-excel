@@ -7,7 +7,11 @@ from tkinter import messagebox
 
 # # ================= CONFIGURA ARQUIVO E URL =================
 
+# Insira abaixo o link de exportação CSV do seu Google Sheet
+# Apague do /edit? para frente e substitua por /export?format=csv
 url = "DIGITE SUA URL AQUI. USE: /export?format=csv"
+
+# Nome do arquivo Excel onde os dados serão armazenados
 arquivo_excel = "NOME_DO_ARQUIVO.xlsx"
 
 def caminho_recurso(relative_path):
