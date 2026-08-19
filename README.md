@@ -31,10 +31,21 @@ O sistema faz a ponte entre a resposta do formulário e a planilha final da empr
 
 ---
 
+### ⚙️ Como Configurar as Credenciais
+
+1. Crie um projeto no **Google Cloud Console**.
+2. Ative as APIs **Google Sheets API** e **Google Drive API**.
+3. Crie uma **Conta de Serviço (Service Account)** e baixe o arquivo de chave `.json`.
+4. Compartilhe a planilha do Google com o e-mail da Conta de Serviço.
+5. Preencha as variáveis `NOME_ARQUIVO_JSON` e `ID_PLANILHA_GOOGLE` no arquivo `main.py`.
+
 ## 🛠️ Tecnologias Utilizadas
+
+---
 
 - **Python 3.13**
 - **Pandas:** Manipulação, limpeza e estruturação dos dados.
 - **OpenPyXL:** Leitura, gravação e formatação de estilos/cores nas células do Excel.
 - **Tkinter & Threading:** Interface visual leve e execução em segundo plano.
 - **PyInstaller:** Transforma o script em executável autônomo para o usuário final.
+
