@@ -39,6 +39,9 @@ O sistema faz a ponte entre a resposta do formulário e a planilha final da empr
 4. Compartilhe a planilha do Google com o e-mail da Conta de Serviço.
 5. Preencha as variáveis `NOME_ARQUIVO_JSON` e `ID_PLANILHA_GOOGLE` no arquivo `main.py`.
 
+---
+
+>>>>>>> b093287 (docs: atualizacao do README)
 ## 🛠️ Tecnologias Utilizadas
 
 ---
