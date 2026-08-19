@@ -41,7 +41,6 @@ O sistema faz a ponte entre a resposta do formulário e a planilha final da empr
 
 ---
 
->>>>>>> b093287 (docs: atualizacao do README)
 ## 🛠️ Tecnologias Utilizadas
 
 ---

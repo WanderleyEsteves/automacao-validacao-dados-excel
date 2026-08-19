@@ -13,7 +13,6 @@ ID_PLANILHA_GOOGLE = ""      # Coloque aqui o ID da sua planilha (o código entr
 arquivo_excel = "definitivo_2.xlsx"
 
 def caminho_recurso(relative_path):
-    """ Retorna o caminho correto para o arquivo, seja rodando em desenvolvimento ou no .exe """
     try:
         
         base_path = sys._MEIPASS
