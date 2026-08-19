@@ -142,7 +142,7 @@ try:
 except Exception:
     tk.Label(janela, text="SISTEMA X", font=("Arial", 20, "bold"), bg="#FFFFFF", fg="#FFFFFF").pack(pady=40)
 
-tk.Label(janela, text="Clique abaixo para buscar \n dados dos médicos.", font=("Arial", 11), bg="#FFFFFF", fg="#1A2B4C").pack(pady=10)
+tk.Label(janela, text="Clique abaixo para buscar \n dados usuários.", font=("Arial", 11), bg="#FFFFFF", fg="#1A2B4C").pack(pady=10)
 
 btn_atualizar = tk.Button(janela, text="ATUALIZAR PLANILHA", font=("Arial", 11, "bold"), bg="#D1D5DB", fg="#1A2B4C", relief="flat", cursor="hand2", padx=60,pady=10, command=lambda: threading.Thread(target=executar_atualizacao, daemon=True).start())
 btn_atualizar.pack(pady=20)
