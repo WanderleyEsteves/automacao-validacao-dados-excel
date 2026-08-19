@@ -4,25 +4,27 @@ from openpyxl import load_workbook
 from openpyxl.styles import PatternFill
 import tkinter as tk
 from tkinter import messagebox
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 
-# # ================= CONFIGURA ARQUIVO E URL =================
-
-# Insira abaixo o link de exportação CSV do seu Google Sheet
-# Apague do /edit? para frente e substitua por /export?format=csv
-url = "DIGITE SUA URL AQUI. USE: /export?format=csv"
-
-# Nome do arquivo Excel onde os dados serão armazenados
-arquivo_excel = "NOME_DO_ARQUIVO.xlsx"
+# Configurações de arquivo e API do Google
+NOME_ARQUIVO_JSON = ""  # Altere para o nome do seu arquivo .json
+ID_PLANILHA_GOOGLE = ""      # Coloque aqui o ID da sua planilha (o código entre /d/ e /edit)
+arquivo_excel = "definitivo_2.xlsx"
 
 def caminho_recurso(relative_path):
     """ Retorna o caminho correto para o arquivo, seja rodando em desenvolvimento ou no .exe """
     try:
+        
         base_path = sys._MEIPASS
     except Exception:
-        base_path = os.path.abspath(".")
+        
+        try:
+            base_path = os.path.dirname(os.path.abspath(__file__))
+        except NameError:
+            base_path = os.path.abspath(".")
+            
     return os.path.join(base_path, relative_path)
-
-#================= LOGICA =================
 
 
 def formatar_cpf(val):
@@ -48,17 +50,37 @@ def tratar_e_formatar_telefone(val):
         return f"({numeros[:2]}) {numeros[2:7]}-{numeros[7:]}", True
     return val, False
 
+def conectar_google_sheets():
+
+    scopes = [
+        "https://spreadsheets.google.com/feeds",
+        "https://www.googleapis.com/auth/drive"
+    ]
+    caminho_json = caminho_recurso(NOME_ARQUIVO_JSON)
+    creds = ServiceAccountCredentials.from_json_keyfile_name(caminho_json, scopes)
+    client = gspread.authorize(creds)
+    sheet = client.open_by_key(ID_PLANILHA_GOOGLE).sheet1
+    return sheet
+
 def executar_atualizacao():
     try:
         label_status.config(text="Buscando novas respostas...", fg="#FFFFFF")
         btn_atualizar.config(state="disabled")
         
-        df = pd.read_csv(url, dtype=str).fillna("")
+        sheet = conectar_google_sheets()
+        dados_brutos = sheet.get_all_values()
+        
+        if dados_brutos:
+            headers = dados_brutos[0]
+            rows = dados_brutos[1:]
+            df = pd.DataFrame(rows, columns=headers).astype(str).fillna("")
+        else:
+            df = pd.DataFrame()
 
         if "CPF" in df:
             df["CPF"] = df["CPF"].apply(formatar_cpf)
 
-        termos_telefone = ["TELEFONE", "CELULAR","TELEFONE (ZAP)" ,"CEL", "WHATS", "CONTATO"]
+        termos_telefone = ["TELEFONE", "CELULAR","TELEFONE (ZAP)" ,"CEL", "FONE", "WHATS", "CONTATO"]
         coluna_tel = next((col for col in df.columns if any(t in col.strip().upper() for t in termos_telefone)), None)
 
         status_cpfs = [not cpf_valido(x) for x in df["CPF"]] if "CPF" in df else []
@@ -71,11 +93,7 @@ def executar_atualizacao():
                 status_tels.append(not valido)
 
         label_status.config(text="Salvando na planilha...", fg="#FFFFFF")
-        if not os.path.exists(arquivo_excel):
-            df.to_excel(arquivo_excel, index=False)
-        else:
-            with pd.ExcelWriter(arquivo_excel, engine="openpyxl", mode="a", if_sheet_exists="overlay") as writer:
-                df.to_excel(writer, index=False, header=False, startrow=1)
+        df.to_excel(arquivo_excel, index=False)
 
         wb = load_workbook(arquivo_excel)
         ws = wb.active
@@ -96,19 +114,22 @@ def executar_atualizacao():
         label_status.config(text="Pronto! Tudo atualizado.", fg="#4ADE80")
         messagebox.showinfo("Sucesso", "A planilha foi atualizada com os novos dados.")
 
+    except FileNotFoundError:
+        label_status.config(text="Erro de Arquivo.", fg="#F87171")
+        messagebox.showerror("Arquivo não encontrado", f"Não foi possível localizar o arquivo de chave '{NOME_ARQUIVO_JSON}'.")
     except PermissionError:
         label_status.config(text="Erro: Arquivo aberto.", fg="#F87171")
-        messagebox.showerror("Arquivo em uso", "A planilha 'NOME_DO_ARQUIVO.xlsx' está aberta. Por favor, feche-a para continuar.")
+        messagebox.showerror("Arquivo em uso", f"A planilha '{arquivo_excel}' está aberta. Por favor, feche-a para continuar.")
     except Exception as e:
         label_status.config(text="Ops, algo deu errado.", fg="#F87171")
         messagebox.showerror("Erro", f"Não foi possível atualizar: {str(e)}")
     finally:
         btn_atualizar.config(state="normal")
 
-#================= INTERFACE =================
+# INTERFACE 
 
 janela = tk.Tk()
-janela.title("01 - Portfólio")
+janela.title("x - CONTRATO x x")
 janela.geometry("420x450")
 janela.configure(bg="#FFFFFF")
 janela.resizable(False, False)
@@ -120,9 +141,9 @@ try:
     if img.width() > 250: img = img.subsample(2, 2)
     tk.Label(janela, image=img, bg="#FCFDFF").pack(pady=15)
 except Exception:
-    tk.Label(janela, text="01 - Portfólio", font=("Arial", 20, "bold"), bg="#FFFFFF", fg="#FFFFFF").pack(pady=40)
+    tk.Label(janela, text="SISTEMA X", font=("Arial", 20, "bold"), bg="#FFFFFF", fg="#FFFFFF").pack(pady=40)
 
-tk.Label(janela, text="Clique abaixo para buscar \n dados dos usuários.", font=("Arial", 11), bg="#FFFFFF", fg="#1A2B4C").pack(pady=10)
+tk.Label(janela, text="Clique abaixo para buscar \n dados dos médicos.", font=("Arial", 11), bg="#FFFFFF", fg="#1A2B4C").pack(pady=10)
 
 btn_atualizar = tk.Button(janela, text="ATUALIZAR PLANILHA", font=("Arial", 11, "bold"), bg="#D1D5DB", fg="#1A2B4C", relief="flat", cursor="hand2", padx=60,pady=10, command=lambda: threading.Thread(target=executar_atualizacao, daemon=True).start())
 btn_atualizar.pack(pady=20)
