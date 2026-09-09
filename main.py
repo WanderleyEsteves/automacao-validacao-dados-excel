@@ -8,23 +8,19 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
 # Configurações de arquivo e API do Google
-NOME_ARQUIVO_JSON = ""  # Altere para o nome do seu arquivo .json
-ID_PLANILHA_GOOGLE = ""      # Coloque aqui o ID da sua planilha (o código entre /d/ e /edit)
-arquivo_excel = "definitivo_2.xlsx"
+NOME_ARQUIVO_JSON = "seu_arquivo.json"  # Altere para o nome do seu arquivo .json
+ID_PLANILHA_GOOGLE = "seu_id_aqui"      # Coloque aqui o ID da sua planilha (o código entre /d/ e /edit)
+arquivo_excel = "x x.xlsx"
 
 def caminho_recurso(relative_path):
+    
     try:
-        
         base_path = sys._MEIPASS
     except Exception:
-        
-        try:
-            base_path = os.path.dirname(os.path.abspath(__file__))
-        except NameError:
-            base_path = os.path.abspath(".")
-            
+        base_path = os.path.dirname(os.path.abspath(__file__))
     return os.path.join(base_path, relative_path)
 
+# ======================== FUNÇÕES DE LÓGICA + Validações =============================
 
 def formatar_cpf(val):
     numeros = re.sub(r"\D", "", str(val))
@@ -50,7 +46,7 @@ def tratar_e_formatar_telefone(val):
     return val, False
 
 def conectar_google_sheets():
-
+    
     scopes = [
         "https://spreadsheets.google.com/feeds",
         "https://www.googleapis.com/auth/drive"
@@ -66,6 +62,7 @@ def executar_atualizacao():
         label_status.config(text="Buscando novas respostas...", fg="#FFFFFF")
         btn_atualizar.config(state="disabled")
         
+        # Conexão via API 
         sheet = conectar_google_sheets()
         dados_brutos = sheet.get_all_values()
         
@@ -125,7 +122,7 @@ def executar_atualizacao():
     finally:
         btn_atualizar.config(state="normal")
 
-# INTERFACE 
+# ======================= INTERFACE ==============================
 
 janela = tk.Tk()
 janela.title("x - CONTRATO x x")
@@ -140,9 +137,9 @@ try:
     if img.width() > 250: img = img.subsample(2, 2)
     tk.Label(janela, image=img, bg="#FCFDFF").pack(pady=15)
 except Exception:
-    tk.Label(janela, text="SISTEMA X", font=("Arial", 20, "bold"), bg="#FFFFFF", fg="#FFFFFF").pack(pady=40)
+    tk.Label(janela, text="SISTEMA XXXX", font=("Arial", 20, "bold"), bg="#FFFFFF", fg="#FFFFFF").pack(pady=40)
 
-tk.Label(janela, text="Clique abaixo para buscar \n dados usuários.", font=("Arial", 11), bg="#FFFFFF", fg="#1A2B4C").pack(pady=10)
+tk.Label(janela, text="Clique abaixo para buscar \n dados dos funcionários.", font=("Arial", 11), bg="#FFFFFF", fg="#1A2B4C").pack(pady=10)
 
 btn_atualizar = tk.Button(janela, text="ATUALIZAR PLANILHA", font=("Arial", 11, "bold"), bg="#D1D5DB", fg="#1A2B4C", relief="flat", cursor="hand2", padx=60,pady=10, command=lambda: threading.Thread(target=executar_atualizacao, daemon=True).start())
 btn_atualizar.pack(pady=20)
