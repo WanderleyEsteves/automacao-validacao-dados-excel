@@ -57,3 +57,8 @@ Para rodar a automação integrada à nuvem:
 - **OpenPyXL:** Leitura, gravação e aplicação de estilos/cores nas células do Excel.
 - **Tkinter & Threading:** Interface gráfica e gerenciamento de tarefas assíncronas.
 - **PyInstaller:** Compilação da aplicação em executável autônomo `.exe` para o usuário final.
+
+## 📚 Referências e Créditos
+
+Este projeto teve como base de estudo e inspiração para a integração com a API a aula de automação em Python da **Asimov Academy**. 
+- Assista ao vídeo de referência:  [ Integração Google Sheets com Python - Do Básico ao Avançado](https://www.youtube.com/watch?v=6XaF4ZF7LW0).
